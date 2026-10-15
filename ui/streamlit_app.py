@@ -1,14 +1,41 @@
 """Simple browser UI; set API_URL to reach the FastAPI service."""
 
 import os
+from pathlib import Path
 
 import httpx
 import streamlit as st
 
 API_URL = os.getenv("API_URL", "http://localhost:8000")
+HERO_IMAGE = Path(__file__).resolve().parents[1] / "assets" / "research-assistant-hero.webp"
 st.set_page_config(page_title="Research RAG Assistant", page_icon="📚", layout="wide")
-st.title("📚 Research Document Assistant")
-st.caption("Ask questions grounded in your indexed papers, documentation, and notes.")
+intro, artwork = st.columns([1.15, 1], vertical_alignment="center")
+with intro:
+    st.title("📚 Research Document Assistant")
+    st.caption("Ask questions grounded in your indexed papers, documentation, and notes.")
+with artwork:
+    st.image(
+        str(HERO_IMAGE),
+        caption="Documents → retrieved evidence → cited answers",
+        use_container_width=True,
+    )
+
+with st.container(border=True):
+    steps = st.columns(3)
+    for column, number, title, detail in zip(
+        steps,
+        ("01", "02", "03"),
+        ("Add documents", "Find evidence", "Review sources"),
+        (
+            "Upload PDF, TXT, or Markdown files in the sidebar.",
+            "Ask a question and retrieve relevant passages.",
+            "Open citations to check the supporting text.",
+        ),
+        strict=True,
+    ):
+        with column:
+            st.markdown(f"### {number} · {title}")
+            st.caption(detail)
 
 with st.sidebar:
     st.subheader("Your document library")

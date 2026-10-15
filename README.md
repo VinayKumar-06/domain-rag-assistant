@@ -35,6 +35,20 @@ streamlit run ui/streamlit_app.py
 
 Open `http://localhost:8501`. The FastAPI docs are at `http://localhost:8000/docs`. On first indexing, Sentence Transformers downloads the configured model; model download and indexing are CPU-bound in the default configuration.
 
+The interface includes an original local hero illustration and a three-step guide. The image is bundled with the app, so it works without an external image host.
+
+## Interface images and implementation steps
+
+The hero image lives at `assets/research-assistant-hero.webp`; the Streamlit page loads it relative to `ui/streamlit_app.py`, so it works when the app starts from the repository root or through Docker. To use your own image:
+
+1. Add a licensed PNG, JPEG, or WebP image to `assets/` (for example, `assets/my-hero.png`). Keep it reasonably small and wide so it fits the header.
+2. In `ui/streamlit_app.py`, update `HERO_IMAGE` to the new filename. Keep the `Path(__file__).resolve().parents[1]` prefix so the path does not depend on the launch directory.
+3. Adjust the `st.image` caption and the three short onboarding cards if the image or workflow changes. Streamlit uses the adjacent columns to keep the title and image responsive.
+4. Run the app with the Quick start commands above and confirm the image and onboarding cards render. If the image is missing, check the path and filename casing.
+5. Commit the asset and UI changes together so Docker and hosted builds receive the image. Do not reference a file that exists only on your computer or an expiring image URL.
+
+The numbered onboarding cards are regular Streamlit text components, so you can change their wording directly in `ui/streamlit_app.py` without adding a UI dependency. See `docs/interface-images.md` for the full asset checklist and deployment notes.
+
 ## Configure answer generation
 
 Set `LLM_BASE_URL`, `LLM_MODEL`, and optionally `LLM_API_KEY` in `.env` for a compatible `/chat/completions` service. Keep secrets out of Git. Without an LLM configured, the app returns the highest-ranked retrieved passage as an extractive answer with its source label. Provider failures return an API error rather than an invented response.
