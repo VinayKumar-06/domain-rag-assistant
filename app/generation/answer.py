@@ -23,7 +23,7 @@ def generate_answer(question: str, passages: list[dict]) -> tuple[str, list[dict
         evidence.append(f"[S{i}] {p['filename']} (page {p.get('page') or 'unknown'}):\n{p['text']}")
     settings = get_settings()
     if not (settings.llm_base_url and settings.llm_model):
-        answer = "I found these potentially relevant passages. Configure an LLM provider to synthesize an answer."
+        answer = f'The most relevant retrieved passage says: [S1] “{passages[0]["text"]}”'
         return answer, sources
     response = httpx.post(
         f"{settings.llm_base_url.rstrip('/')}/chat/completions",
