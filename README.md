@@ -37,7 +37,7 @@ Open `http://localhost:8501`. The FastAPI docs are at `http://localhost:8000/doc
 
 ## Configure answer generation
 
-Set `LLM_BASE_URL`, `LLM_MODEL`, and optionally `LLM_API_KEY` in `.env` for a compatible `/chat/completions` service. Keep secrets out of Git. Without an LLM configured, the app still retrieves and displays evidence, but does not compose a natural-language answer. Provider failures return an API error rather than an invented response.
+Set `LLM_BASE_URL`, `LLM_MODEL`, and optionally `LLM_API_KEY` in `.env` for a compatible `/chat/completions` service. Keep secrets out of Git. Without an LLM configured, the app returns the highest-ranked retrieved passage as an extractive answer with its source label. Provider failures return an API error rather than an invented response.
 
 ## Documents and safety
 
