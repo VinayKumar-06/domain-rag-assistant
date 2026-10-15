@@ -10,7 +10,7 @@ pinned: false
 
 # Domain RAG Assistant
 
-A small, explainable question-answering app for a curated collection of ML papers, technical documentation, and learning notes. It parses PDF, TXT, and Markdown files, indexes chunks in Qdrant, retrieves evidence, and can send that evidence to an OpenAI-compatible chat completions endpoint. Answers expose source passages with filenames and page numbers. If there is no evidence, it abstains.
+A small, explainable question-answering app for a curated collection of ML papers, technical documentation, and learning notes. It parses PDF, TXT, and Markdown files, indexes chunks in Qdrant, retrieves evidence, and can send that evidence to an OpenAI-compatible chat completions endpoint. Answers expose source passages with filenames and page numbers. If nothing is retrieved, it abstains; review the returned passages because semantic search can still return weakly related text.
 
 > This is a portfolio project, not a source of authoritative research or professional advice. Check the original documents before relying on an answer.
 
@@ -82,4 +82,4 @@ Create a Docker Space and push this repository. The container starts the Streaml
 
 ## Known limitations and next steps
 
-The current retriever is dense semantic search; BM25, hybrid fusion, and reranking are follow-up improvements that should be compared on a reviewed question set. PDF layout and tables may be lost during text extraction. Scanned PDFs are detected but need an OCR pipeline. The app does not yet authenticate users, so do not expose it publicly with sensitive documents. The model prompt requests citations, and source passages are returned independently, but generated inline labels are not yet validated against the answer; measure and improve citation support before treating answers as reliable.
+The current retriever is dense semantic search; BM25, hybrid fusion, and reranking are follow-up improvements that should be compared on a reviewed question set. PDF layout and tables may be lost during text extraction. Scanned PDFs are detected but need an OCR pipeline. The app does not yet authenticate users, so do not expose it with sensitive documents. Generated citation labels are restricted to IDs from the retrieved passages, and an answer without a valid label is rejected; this checks citation identity, not whether the cited passage truly supports each claim. Measure semantic citation support before treating answers as reliable.
