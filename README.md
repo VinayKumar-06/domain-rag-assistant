@@ -73,4 +73,3 @@ Create a Docker Space and push this repository. The container starts the Streaml
 ## Known limitations and next steps
 
 The current retriever is dense semantic search; BM25, hybrid fusion, and reranking are follow-up improvements that should be compared on a reviewed question set. PDF layout and tables may be lost during text extraction. Scanned PDFs are detected but need an OCR pipeline. The app does not yet authenticate users, so do not expose it publicly with sensitive documents. The model prompt requests citations, and source passages are returned independently, but generated inline labels are not yet validated against the answer; measure and improve citation support before treating answers as reliable.
-
