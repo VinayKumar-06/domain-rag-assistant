@@ -24,3 +24,22 @@ def test_chunks_overlap_and_keep_page_metadata():
                          doc_id="id", chunk_size=10, overlap=2)
     assert len(chunks) > 1
     assert all(chunk.page == 3 and chunk.filename == "paper.txt" for chunk in chunks)
+
+
+def test_pdf_parser_preserves_page_number_and_rejects_malformed_pdf():
+    import fitz
+
+    pdf = fitz.open()
+    page = pdf.new_page()
+    page.insert_text((72, 72), "Attention is computed across token representations.")
+    content = pdf.tobytes()
+    pdf.close()
+    parsed = parse_document("paper.pdf", content)
+    assert parsed[0].page == 1
+    assert "Attention" in parsed[0].text
+    try:
+        parse_document("broken.pdf", b"not a pdf")
+    except DocumentError as exc:
+        assert "malformed" in str(exc)
+    else:
+        raise AssertionError("expected malformed PDF to be rejected")

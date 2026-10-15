@@ -1,3 +1,13 @@
+---
+title: Domain RAG Assistant
+emoji: 📚
+colorFrom: blue
+colorTo: indigo
+sdk: docker
+app_port: 7860
+pinned: false
+---
+
 # Domain RAG Assistant
 
 A small, explainable question-answering app for a curated collection of ML papers, technical documentation, and learning notes. It parses PDF, TXT, and Markdown files, indexes chunks in Qdrant, retrieves evidence, and can send that evidence to an OpenAI-compatible chat completions endpoint. Answers expose source passages with filenames and page numbers. If there is no evidence, it abstains.

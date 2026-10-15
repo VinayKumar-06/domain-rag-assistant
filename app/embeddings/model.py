@@ -20,4 +20,4 @@ def encode(texts: list[str]) -> list[list[float]]:
 
 
 def dimension() -> int:
-    return int(get_encoder().get_sentence_embedding_dimension())
+    return int(get_encoder().get_embedding_dimension())

@@ -1,6 +1,7 @@
 """FastAPI entry point for ingestion, deletion, retrieval, and grounded Q&A."""
 
 import logging
+import json
 from pathlib import Path
 from time import perf_counter
 
@@ -12,7 +13,18 @@ from app.generation.answer import generate_answer
 from app.ingestion.documents import DocumentError, chunk_pages, document_id, parse_document
 from app.retrieval.store import delete_document, index_chunks, list_documents, search
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s %(message)s")
+class JsonFormatter(logging.Formatter):
+    def format(self, record: logging.LogRecord) -> str:
+        entry = {"time": self.formatTime(record), "level": record.levelname,
+                 "logger": record.name, "event": record.getMessage()}
+        if record.exc_info:
+            entry["exception"] = self.formatException(record.exc_info)
+        return json.dumps(entry)
+
+
+handler = logging.StreamHandler()
+handler.setFormatter(JsonFormatter())
+logging.basicConfig(level=logging.INFO, handlers=[handler])
 logger = logging.getLogger(__name__)
 app = FastAPI(title="Domain RAG Assistant", version="0.1.0")
 
@@ -50,7 +62,7 @@ async def upload_document(file: UploadFile = File(...)):
     except DocumentError as exc:
         raise HTTPException(422, str(exc)) from exc
     except Exception as exc:
-        logger.exception("Document indexing failed: %s", filename)
+        logger.exception("document_indexing_failed")
         raise HTTPException(503, "Indexing failed. Check server logs and service configuration.") from exc
     return {"document_id": doc_id, "filename": filename, "chunks_indexed": count,
             "pages_read": len(pages), "status": "indexed"}

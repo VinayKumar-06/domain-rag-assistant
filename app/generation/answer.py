@@ -1,5 +1,7 @@
 """Answers that use only actual retrieved passages and verifiable source labels."""
 
+import re
+
 import httpx
 
 from app.config import get_settings
@@ -33,5 +35,9 @@ def generate_answer(question: str, passages: list[dict]) -> tuple[str, list[dict
     )
     response.raise_for_status()
     answer = response.json()["choices"][0]["message"]["content"].strip()
-    # Only expose source labels that exist in this request's retrieved set.
+    allowed = {source["id"] for source in sources}
+    cited = set(re.findall(r"\[(S\d+)\]", answer))
+    answer = re.sub(r"\[(S\d+)\]", lambda match: match.group(0) if match.group(1) in allowed else "", answer)
+    if not cited.intersection(allowed):
+        answer = "I couldn't produce an answer with verifiable citations. Please review the retrieved passages."
     return answer, sources
