@@ -10,7 +10,8 @@ def test_empty_evidence_abstains_without_sources():
 def test_sources_are_built_from_retrieved_passages():
     answer, sources = generate_answer("Question?", [{"filename": "paper.pdf", "page": 4,
                                                        "text": "Evidence text", "score": 0.8}])
-    assert "Configure an LLM" in answer
+    assert "Evidence text" in answer
+    assert "[S1]" in answer
     assert sources[0]["filename"] == "paper.pdf"
     assert sources[0]["page"] == 4
 
